@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>😈 เปิดดูสิ...</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#050505;color:#fff;font-family:Arial,"Tahoma",sans-serif}
+body{display:grid;place-items:center;overflow:hidden;text-align:center}
+#intro{padding:24px;max-width:560px}
+h1{font-size:clamp(28px,7vw,48px);margin:0 0 12px;color:#eee}
+p{color:#aaa;line-height:1.6}
+button{border:0;border-radius:10px;padding:15px 25px;font-size:19px;font-weight:bold;background:#c40018;color:#fff;cursor:pointer}
+#scare{display:none;position:fixed;inset:0;background:#000;align-items:center;justify-content:center;flex-direction:column;z-index:5}
+#scare video{width:100%;height:100%;object-fit:contain;position:absolute;inset:0;background:#000}
+#message{position:absolute;bottom:5vh;left:0;right:0;font-weight:900;font-size:clamp(28px,7vw,58px);color:#ff1010;text-shadow:0 0 12px #000,2px 2px #000;z-index:6;padding:10px}
+#close{position:absolute;top:12px;right:12px;z-index:7;background:#222;font-size:14px;padding:9px 12px;opacity:.85}
+@keyframes shake{0%,100%{transform:translate(0,0) scale(1)}20%{transform:translate(-8px,4px) scale(1.04)}40%{transform:translate(8px,-4px) scale(1.02)}60%{transform:translate(-5px,-3px) scale(1.05)}80%{transform:translate(5px,3px) scale(1.03)}}
+.shake{animation:shake .13s infinite}
+.small{font-size:12px;color:#666;margin-top:18px}
+</style>
+</head>
+<body>
+<main id="intro">
+  <h1>👀 มีอะไรให้ดู...</h1>
+  <p>ลองกดปุ่มดูสิ 😏<br>รับรองว่าไม่มีอะไรน่ากลัวหรอก...</p>
+  <button id="start">กดเพื่อดู</button>
+  <div class="small">เว็บแกล้งเพื่อนขำ ๆ — วิดีโอและเสียงจะเริ่มหลังแตะปุ่ม</div>
+</main>
+<section id="scare" aria-hidden="true">
+  <video id="jeffVideo" playsinline preload="auto">
+    <source src="jeff-jumpscare.mp4" type="video/mp4">
+    เบราว์เซอร์นี้ไม่รองรับวิดีโอ
+  </video>
+  <div id="message">วันชัยโดนหลอกแล้ว!!! 😂</div>
+  <button id="close">ปิด ✕</button>
+</section>
+<script>
+const intro=document.getElementById('intro'), scare=document.getElementById('scare');
+const video=document.getElementById('jeffVideo');
+document.getElementById('start').addEventListener('click',async()=>{
+  intro.style.display='none'; scare.style.display='flex'; scare.setAttribute('aria-hidden','false');
+  scare.classList.add('shake');
+  try { video.currentTime=0; video.muted=false; await video.play(); }
+  catch(e) { video.muted=true; try { await video.play(); } catch(err) {} }
+  if(navigator.vibrate) navigator.vibrate([100,50,250]);
+});
+video.addEventListener('ended',()=>{video.pause();});
+document.getElementById('close').addEventListener('click',()=>{
+  video.pause(); video.currentTime=0;
+  scare.style.display='none';scare.classList.remove('shake');intro.style.display='block';
+});
+</script>
+</body>
+</html>
